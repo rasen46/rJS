@@ -26,7 +26,7 @@ Examples of using require and loadModule:
 rjs.loadModule("https://api.github.com/repos/rasen46/rJS/contents/modules/example.js");
 rjs.require("example.js", function(module){
   if(!module)return; 
-  module.example()
+  module.example();
   },5
 );
 ```
@@ -43,7 +43,7 @@ rjs.require("example.js", function(module){
 );
 
 onEvent("testButton", "click", function(){
-  exampleMod.example()
+  exampleMod.example();
 });
 ```
 
@@ -56,7 +56,7 @@ The module should be formatted like this:
 ```
 (function () {
   var module = {
-    rjs.print("Hello World!")
+    rjs.print("Hello World!");
     example: function () {
       // code
     },

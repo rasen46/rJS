@@ -14,10 +14,10 @@ It Currently Features
 - Then you're done :scream:
 
 ## Loading Modules
-- find the repository you need
-- format the url of the repository (should be like `api.github.com/repos/<name>/<repoName>/contents/<path>`)
-- use `rjs.loadModule(<url>)` to load the script into your project
-- call the module via `rjs.require(<fileName>, function(<var>){}, <maxAttempts>)`
+- Find the repository you need
+- Format the URL of the repository (should be like `api.github.com/repos/<name>/<repoName>/contents/<path>`)
+- Use `rjs.loadModule(<url>)` to load the script into your project
+- Call the module via `rjs.require(<fileName>, function(<var>){}, <maxAttempts>)`
 
 Examples of using require and loadModule:
 ```

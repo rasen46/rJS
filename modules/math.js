@@ -17,9 +17,9 @@
 		];
 
 		return rgb(
-			rjs.lerp(parseFloat(c[0][0]) || 0, parseFloat(c[1][0]) || 0, a),
-			rjs.lerp(parseFloat(c[0][1]) || 0, parseFloat(c[1][1]) || 0, a),
-			rjs.lerp(parseFloat(c[0][2]) || 0, parseFloat(c[1][2]) || 0, a)
+			module.lerp(parseFloat(c[0][0]) || 0, parseFloat(c[1][0]) || 0, a),
+			module.lerp(parseFloat(c[0][1]) || 0, parseFloat(c[1][1]) || 0, a),
+			module.lerp(parseFloat(c[0][2]) || 0, parseFloat(c[1][2]) || 0, a)
 		);
 	},
 
@@ -29,10 +29,10 @@
 			rgba2.replace("rgba(", "").replace(")", "").split(",")
 		];
 		return rgb(
-			rjs.lerp(parseFloat(c[0][0]) || 0, parseFloat(c[1][0]) || 0, a),
-			rjs.lerp(parseFloat(c[0][1]) || 0, parseFloat(c[1][1]) || 0, a),
-			rjs.lerp(parseFloat(c[0][2]) || 0, parseFloat(c[1][2]) || 0, a),
-			rjs.lerp(parseFloat(c[0][3]) || 0, parseFloat(c[1][3]) || 0, a)
+			module.lerp(parseFloat(c[0][0]) || 0, parseFloat(c[1][0]) || 0, a),
+			module.lerp(parseFloat(c[0][1]) || 0, parseFloat(c[1][1]) || 0, a),
+			module.lerp(parseFloat(c[0][2]) || 0, parseFloat(c[1][2]) || 0, a),
+			module.lerp(parseFloat(c[0][3]) || 0, parseFloat(c[1][3]) || 0, a)
 		);
 	},
   };

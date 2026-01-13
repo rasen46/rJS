@@ -2,7 +2,7 @@ var rjs = {
 	startTime: getTime(),
 	modules: {},
 
-	// rasenJS resources v1.0.0 real //
+	// rasenJS resources v1.0.1 real //
 	// source file: https://github.com/rasen46/rJS //
 	print: function(text, type) {
 		var cTime = getTime() - rjs.startTime;

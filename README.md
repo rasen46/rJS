@@ -53,7 +53,7 @@ Examples of requiring modules without safety checks (slightly faster, unreliable
 // unreliable module requiring
 
 rjs.loadModule("https://api.github.com/repos/rasen46/rJS/contents/modules/example.js");
-var exampleMod = rjs.modules["example.js"]
+var exampleMod = rjs.modules["example.js"];
 ```
 
 ## Creating your own loadable modules

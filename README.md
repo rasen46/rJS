@@ -61,6 +61,7 @@ The module should be formatted like this:
       // code
     },
     example2: function () {
+      module.example();
       //code
     },
   };

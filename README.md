@@ -2,11 +2,12 @@
 
 rJS (rasen46's JavaScript Library) is a repo with JS scripts designed for Code.org projects based in **App Lab**
 
-It Currently Features
-- 
+## It Currently Features
 - external loading of functions/scripts from GitHub via `startWebRequest`
-- 1 module
+- 1 official module
 - better console.log outputs (`[00:00:000] [script.js/INFO]: example`)
+- Code.org App Lab compatibility
+- relatively optimized code? 
 
 ## Getting Started
 - Find the `main.js` file from this repository (`https://github.com/rasen46/rJS/blob/main/main.js`)

@@ -47,6 +47,14 @@ onEvent("testButton", "click", function(){
 });
 ```
 
+Examples of requiring modules without safety checks (slightly faster, unreliable):
+```
+// unreliable module requiring
+
+rjs.loadModule("https://api.github.com/repos/rasen46/rJS/contents/modules/example.js");
+var exampleMod = rjs.modules["example.js"]
+```
+
 ## Creating your own loadable modules
 - Create a GitHub Repository
 - Create a file with the file extension `.js`

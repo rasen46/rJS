@@ -1,4 +1,4 @@
-// rasenJS resources v1.0.6 real //
+// rasenJS resources v1.0.7 real //
 // source file: https://github.com/rasen46/rJS //
 
 var rjs = {};
@@ -79,13 +79,13 @@ function easing(a, dir, power) {
 //easingDirection {"in"/"out"/"inout"} - direction of exponential curve
 //alpha {number} - alpha (percentage to 'b')
 function tween(a, b, easingExponent, easingDirection, alpha) {
-	if (typeof st != "number" || typeof ed != "number" || typeof a != "number") return print("got malformed start/end/alpha values (is it a number?) (tween)", "WARN");
-	if (typeof easingExpo != "number" || typeof easingDir != "string") return print("got malformed expo/dir values (is it num/string?) (tween)", "WARN");
-	return st + (ed - st) * easing(a, easingDir, easingExpo);
+	if (typeof a != "number" || typeof b != "number" || typeof alpha != "number") return print("got malformed start/end/alpha values (is it a number?) (tween)", "WARN");
+	if (typeof easingExponent != "number" || typeof easingDirection != "string") return print("got malformed expo/dir values (is it num/string?) (tween)", "WARN");
+	return a + (b - a) * easing(alpha, easingDirection, easingExponent);
 }
 
 //Logs a debug print into console
-//text {string} - the text that will be logged into console
+//text {any} - the text that will be logged into console
 //type (optional) {string} - the type of log that will be logged into console (warn, info, etc)
 //scriptName (optional) {string} - the name of the log that will be logged into console
 function print(text, type, scriptName) {
@@ -109,7 +109,7 @@ function print(text, type, scriptName) {
 //Converts a Base64 into a usable string
 //str {string} - the base64 to convert to a string
 function atob(str) {
-	if (!str || typeof str != "string") return print("got malformed string (is it a string?) (atob)", "WARN");
+	if (typeof str != "string") return print("got malformed string (is it a string?) (atob)", "WARN");
 	//used a tutorial since i idk how base64 works
 	var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
 		output = "",
@@ -134,7 +134,7 @@ function atob(str) {
 //Converts a string into Base64
 //str {string} - the string to convert to base64
 function btoa(str) {
-	if (!str || typeof str != "string") return print("got malformed string (is it a string?) (btoa)", "WARN");
+	if (typeof str != "string") return print("got malformed string (is it a string?) (btoa)", "WARN");
 	//used a tutorial since i idk how base64 works
 	var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
 	  output = "",
@@ -162,7 +162,7 @@ function btoa(str) {
 //Loads a module from Github or any page that uses B64 (deprecated)
 //url {string} - https://api.github.com/repos/<name>/<repoName>/contents/<path>
 function loadModule(url) {
-	if (!url || typeof url != "string") return print("got malformed url (is it a string?) (loadModule)", "WARN");
+	if (typeof url != "string") return print("got malformed url (is it a string?) (loadModule)", "WARN");
 	startWebRequest(url, function(status, type, content) {
 		if (status == 200) {
 			var usableData = JSON.parse(content),
@@ -182,7 +182,7 @@ function loadModule(url) {
 //callback {function(var)} - read documentation: https://github.com/rasen46/rJS 
 //max (optional) {number} - maximum about of attempts before module gets dropped
 function require(name, callback, max) {
-	if (!name || typeof name != "string") return print("got malformed name (is it a string?) (require)", "WARN");
+	if (typeof name != "string" || typeof callback != "function") return print("got malformed name/callback (is it a string/function?) (require)", "WARN");
 	var maxAttempts = Math.abs(max) || 5,
 		i = 0,
 		required;
@@ -208,7 +208,7 @@ function require(name, callback, max) {
 //additional (optional) {json} - properties to change about the element
 function createElement(element, id, additional) {
 	if (!element || !id || typeof element != "string" || typeof id != "string") return print("got malformed element or id (is it a string?) (createElement)");
-	var vaildElements = ["button", "textInput", "textLabel", "dropdown", "checkbox", "textArea", "imageUploadButton", "image"]
+	var vaildElements = ["button", "textInput", "textLabel", "dropdown", "checkbox", "textArea", "imageUploadButton", "image"];
 	for (var i in vaildElements) {
 		if (vaildElements[i].toLowerCase() == element.toLowerCase()) {
 			eval(vaildElements[i] + "('" + id + "',false)");

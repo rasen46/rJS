@@ -3,7 +3,7 @@
 (function () {
   var module = {
     example: function () {
-      rjs.print("hello");
+      print("hello");
     },
   };
   return module;

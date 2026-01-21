@@ -10,22 +10,21 @@ rJS (rasen46's JavaScript Library) is a repo with JS scripts designed for Code.o
 - relatively optimized code? 
 
 ## Getting Started
-- Find the `main.js` file from this repository (`https://github.com/rasen46/rJS/blob/main/main.js`)
-- Copy and paste the script within the file to the top of the current project you're working on
+- Import the library `1d793fbc-0484-4b05-84fa-3031e34ae54f`
 - Then you're done :scream:
 
 ## Loading Modules
 - Find the repository you need
 - Format the URL of the repository (should be like `api.github.com/repos/<name>/<repoName>/contents/<path>`)
-- Use `rjs.loadModule(<url>)` to load the script into your project
-- Call the module via `rjs.require(<fileName>, function(<var>){}, <maxAttempts>)`
+- Use `Rasenjs.loadModule(<url>)` to load the script into your project
+- Call the module via `Rasenjs.require(<fileName>, function(<var>){}, <maxAttempts>)`
 
 Examples of using require and loadModule:
 ```
 // using module functions
 
-rjs.loadModule("https://api.github.com/repos/rasen46/rJS/contents/modules/example.js");
-rjs.require("example.js", function(module){
+Rasenjs.loadModule("https://api.github.com/repos/rasen46/rJS/contents/modules/example.js");
+Rasenjs.require("example.js", function(module){
   if(!module)return; 
   module.example();
   },5
@@ -36,8 +35,8 @@ rjs.require("example.js", function(module){
 
 var exampleMod;
 
-rjs.loadModule("https://api.github.com/repos/rasen46/rJS/contents/modules/example.js");
-rjs.require("example.js", function(module){
+Rasenjs.loadModule("https://api.github.com/repos/rasen46/rJS/contents/modules/example.js");
+Rasenjs.require("example.js", function(module){
   if(!module)return; 
   exampleMod = module;
   },5
@@ -52,8 +51,8 @@ Examples of requiring modules without safety checks (slightly faster, unreliable
 ```
 // unreliable module requiring
 
-rjs.loadModule("https://api.github.com/repos/rasen46/rJS/contents/modules/example.js");
-var exampleMod = rjs.modules["example.js"];
+Rasenjs.loadModule("https://api.github.com/repos/rasen46/rJS/contents/modules/example.js");
+var exampleMod = Rasenjs.modules["example.js"];
 ```
 
 ## Creating your own loadable modules
@@ -65,7 +64,7 @@ The module should be formatted like this:
 ```
 (function () {
   var module = {
-    rjs.print("Hello World!");
+    print("Hello World!");
     example: function () {
       // code
     },

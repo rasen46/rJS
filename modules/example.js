@@ -3,7 +3,7 @@
 (function () {
   var module = {
     example: function () {
-      Rasenjs.print("hello");
+      RJSL.print("hello");
     },
   };
   return module;

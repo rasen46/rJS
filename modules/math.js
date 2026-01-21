@@ -1,17 +1,17 @@
 (function () {
   var module = {
     clamp: function(value, m, n) {
-        if (typeof value != "number" || typeof m != "number" || typeof n != "number") return print("got malformed value or min/max (is it a number?)", "WARN");
+        if (typeof value != "number" || typeof m != "number" || typeof n != "number") return Rasenjs.print("got malformed value or min/max (is it a number?)", "WARN");
 		return Math.max(m, Math.min(n, value));
 	},
 
 	lerp: function(st, ed, a) {
-        if (typeof st != "number" || typeof ed != "number" || typeof a != "number") return print("got malformed start/end/alpha values (is it a number?)", "WARN");
+        if (typeof st != "number" || typeof ed != "number" || typeof a != "number") return Rasenjs.print("got malformed start/end/alpha values (is it a number?)", "WARN");
 		return st + (ed - st) * a;
 	},
 
 	lerpRGB: function(rgb1, rgb2, a) {
-		if (!rgb1 || !rgb2 || !a || typeof rgb1 != "string" || typeof rgb2 != "string" || typeof a != "number") return print("got malformed rgb or alpha values (is it a string or number?)", "WARN");
+		if (!rgb1 || !rgb2 || !a || typeof rgb1 != "string" || typeof rgb2 != "string" || typeof a != "number") return Rasenjs.print("got malformed rgb or alpha values (is it a string or number?)", "WARN");
 		var c = [rgb1.replace("rgb(", "").replace(")", "").split(","),
 			rgb2.replace("rgb(", "").replace(")", "").split(",")
 		];
@@ -24,7 +24,7 @@
 	},
 
 	lerpRGBA: function(rgba1, rgba2, a) {
-		if (!rgba1 || !rgba2 || !a || typeof rgba1 != "string" || typeof rgba2 != "string" || typeof a != "number") return print("got malformed rgb or alpha values (is it a string or number?)", "WARN");
+		if (!rgba1 || !rgba2 || !a || typeof rgba1 != "string" || typeof rgba2 != "string" || typeof a != "number") return Rasenjs.print("got malformed rgb or alpha values (is it a string or number?)", "WARN");
 		var c = [rgba1.replace("rgba(", "").replace(")", "").split(","),
 			rgba2.replace("rgba(", "").replace(")", "").split(",")
 		];
@@ -39,3 +39,4 @@
   return module;
 
 })({});
+

@@ -1,6 +1,6 @@
 # rJS
 
-rJS (rasen46's JavaScript Library) is a repo with JS scripts designed for Code.org projects based in **App Lab** with an enviroment similiar to **Luau**
+rJS (rasen46's JavaScript Library) is a repo with JS scripts designed for Code.org projects based in **App Lab**
 
 ## It Currently Features
 - external loading of functions/scripts from GitHub via `startWebRequest`

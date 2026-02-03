@@ -12,7 +12,7 @@ rjs.storage = {};
 //minimum {number} - the minimum x should be
 //maximum {number} - the maximum x should be
 function clamp(x, minimum, maximum) {
-	if (typeof x != "number" || typeof minimum != "number" || typeof maximum != "number") return print("got malformed x/min/max (is it a number?) (clamp)", "WARN");
+	if (typeof x != "number" || typeof minimum != "number" || typeof maximum != "number") return print("got malformed x/min/max (is it a number?)", "WARN", "clamp");
 	return Math.max(minimum, Math.min(maximum, x));
 }
 
@@ -21,8 +21,43 @@ function clamp(x, minimum, maximum) {
 //b {string} - ending value
 //alpha {number} - alpha (percentage to 'b')
 function lerp(a, b, alpha) {
-	if (typeof a != "number" || typeof b != "number" || typeof alpha != "number") return print("got malformed start/end/alpha values (is it a number?) (lerp)", "WARN");
+	if (typeof a != "number" || typeof b != "number" || typeof alpha != "number") return print("got malformed start/end/alpha values (is it a number?)", "WARN", "lerp");
 	return a + (b - a) * alpha;
+}
+
+//Linear lerping for element properties
+//property {object} - should be formatted like this {from: {size:0}, to: {size:1}}
+//alpha {number} - alpha (percentage to 'b')
+function lerpProperty(property, alpha) {
+	if (typeof property != "object" || typeof alpha != "number") return print("got malformed property/alpha values (is it a object/number?)", "WARN", "tweenProperty");
+	if (!property.to || !property.from) return print("no from/to defined", "WARN");
+	var endProperties = {};
+
+	for (var elementProperty in property.from) {
+		if (elementProperty.includes("color")) {
+			var c;
+			if (!property.from[elementProperty].includes("rgba") || !property.to[elementProperty].includes("rgba")) {
+				c = [property.from[elementProperty].replace("rgb(", "").replace(")", "").split(",").push(0),
+					property.to[elementProperty].replace("rgb(", "").replace(")", "").split(",").push(0)
+				];
+			} else {
+				c = [property.from[elementProperty].replace("rgba(", "").replace(")", "").split(","),
+					property.to[elementProperty].replace("rgba(", "").replace(")", "").split(",")
+				];
+			}
+
+			endProperties[elementProperty] = [
+				lerp(parseFloat(c[0][0]) || 0, parseFloat(c[1][0]) || 0, alpha),
+				lerp(parseFloat(c[0][1]) || 0, parseFloat(c[1][1]) || 0, alpha),
+				lerp(parseFloat(c[0][2]) || 0, parseFloat(c[1][2]) || 0, alpha),
+				lerp(parseFloat(c[0][3]) || 0, parseFloat(c[1][3]) || 0, alpha)
+			];
+		} else {
+			endProperties[elementProperty] = lerp(property.from[elementProperty], property.to[elementProperty], alpha);
+		}
+	}
+
+	return endProperties;
 }
 
 //Linear Interpolation using alpha with RGB values (prone to errors, use RBGA instead)
@@ -30,7 +65,7 @@ function lerp(a, b, alpha) {
 //rgb2 {string} - ending RGB value
 //alpha {number} - alpha (percentage to rgb2)
 function lerpRGB(rgb1, rgb2, alpha) {
-	if (typeof rgb1 != "string" || typeof rgb2 != "string" || typeof alpha != "number") return print("got malformed rgb/alpha values (is it a string/number?) (lerpRGB)", "WARN");
+	if (typeof rgb1 != "string" || typeof rgb2 != "string" || typeof alpha != "number") return print("got malformed rgb/alpha values (is it a string/number?)", "WARN", "lerpRGB");
 	var c = [rgb1.replace("rgb(", "").replace(")", "").split(","),
 		rgb2.replace("rgb(", "").replace(")", "").split(",")
 	];
@@ -47,7 +82,7 @@ function lerpRGB(rgb1, rgb2, alpha) {
 //rgba2 {string} - ending RGB value
 //alpha {number} - alpha (percentage to rgba2)
 function lerpRGBA(rgba1, rgba2, alpha) {
-	if (typeof rgba1 != "string" || typeof rgba2 != "string" || typeof alpha != "number") return print("got malformed rgba/alpha values (is it a string/number?) (lerpRGBA)", "WARN");
+	if (typeof rgba1 != "string" || typeof rgba2 != "string" || typeof alpha != "number") return print("got malformed rgba/alpha values (is it a string/number?)", "WARN", "lerpRGBA");
 	var c = [rgba1.replace("rgba(", "").replace(")", "").split(","),
 		rgba2.replace("rgba(", "").replace(")", "").split(",")
 	];
@@ -67,7 +102,7 @@ function easing(a, dir, power) {
 	} else if (dir.toLowerCase() == "inout" || dir.toLowerCase() == "outin") {
 		return a < 0.5 ? Math.pow(2 * a, power) / 2 : 1 - Math.pow(2 - 2 * a, power) / 2;
 	} else {
-		print("invaild direction for tweeing, defaulting to 1", "WARN");
+		print("invaild direction for tweeing, defaulting to 1", "WARN", "easing");
 		return 1;
 	}
 }
@@ -79,9 +114,46 @@ function easing(a, dir, power) {
 //easingDirection {"in"/"out"/"inout"} - direction of exponential curve
 //alpha {number} - alpha (percentage to 'b')
 function tween(a, b, easingExponent, easingDirection, alpha) {
-	if (typeof a != "number" || typeof b != "number" || typeof alpha != "number") return print("got malformed start/end/alpha values (is it a number?) (tween)", "WARN");
-	if (typeof easingExponent != "number" || typeof easingDirection != "string") return print("got malformed expo/dir values (is it num/string?) (tween)", "WARN");
+	if (typeof a != "number" || typeof b != "number" || typeof alpha != "number") return print("got malformed start/end/alpha values (is it a number?)", "WARN", "tween");
+	if (typeof easingExponent != "number" || typeof easingDirection != "string") return print("got malformed expo/dir values (is it num/string?)", "WARN", "tween");
 	return a + (b - a) * easing(alpha, easingDirection, easingExponent);
+}
+
+//Exponential lerping for element properties (less performant)
+//property {object} - should be formatted like this {from: {size:0}, to: {size:1}}
+//easingExponent {number} - exponent 'alpha' should accend by
+//easingDirection {"in"/"out"/"inout"} - direction of exponential curve
+//alpha {number} - alpha (percentage to 'b')
+function tweenProperty(property, easingExponent, easingDirection, alpha) {
+	if (typeof property != "object" || typeof easingExponent != "number" || typeof easingDirection != "string" || typeof alpha != "number") return print("got malformed property/easing/alpha values (is it a object/number?)", "WARN", "tweenProperty");
+	if (!property.to || !property.from) return print("no from/to defined", "WARN");
+	var endProperties = {};
+
+	for (var elementProperty in property.from) {
+		if (elementProperty.includes("color")) {
+			var c;
+			if (!property.from[elementProperty].includes("rgba") || !property.to[elementProperty].includes("rgba")) {
+				c = [property.from[elementProperty].replace("rgb(", "").replace(")", "").split(",").push(0),
+					property.to[elementProperty].replace("rgb(", "").replace(")", "").split(",").push(0)
+				];
+			} else {
+				c = [property.from[elementProperty].replace("rgba(", "").replace(")", "").split(","),
+					property.to[elementProperty].replace("rgba(", "").replace(")", "").split(",")
+				];
+			}
+
+			endProperties[elementProperty] = [
+				tween(parseFloat(c[0][0]) || 0, parseFloat(c[1][0]) || 0, easingExponent, easingDirection, alpha),
+				tween(parseFloat(c[0][1]) || 0, parseFloat(c[1][1]) || 0, easingExponent, easingDirection, alpha),
+				tween(parseFloat(c[0][2]) || 0, parseFloat(c[1][2]) || 0, easingExponent, easingDirection, alpha),
+				tween(parseFloat(c[0][3]) || 0, parseFloat(c[1][3]) || 0, easingExponent, easingDirection, alpha)
+			];
+		} else {
+			endProperties[elementProperty] = tween(property.from[elementProperty], property.to[elementProperty], easingExponent, easingDirection, alpha);
+		}
+	}
+
+	return endProperties;
 }
 
 //Logs a debug print into console
@@ -90,7 +162,7 @@ function tween(a, b, easingExponent, easingDirection, alpha) {
 //scriptName (optional) {string} - the name of the log that will be logged into console
 function print(text, type, scriptName) {
 	var cTime = getTime() - rjs.startTime,
-	  scNM = scriptName || "script.js";
+		scNM = scriptName || "script.js";
 
 	var totalSeconds = Math.floor(cTime / 1000),
 		m = Math.floor(totalSeconds / 60) || 0,
@@ -106,18 +178,37 @@ function print(text, type, scriptName) {
 	console.log("[" + formatToReadable + "] " + "[" + scNM + "/" + logType + "]: " + text);
 }
 
+//Converts tables exclusively using {"key":[]} into strings
+//obj {object} - table to convert to string
+function stringfy(obj) {
+	if (typeof obj != "object") return print("got malformed object (is it a object?)", "WARN", "stringfy");
+	var string = "{\n",
+		k = true;
+
+	for (var key in obj) {
+		if (!k) string += ",\n";
+		k = false;
+
+		string += '"' + key + '": [' + obj[key] + ']';
+	}
+
+	string += "\n}";
+	return string;
+}
+
 //Converts a Base64 into a usable string
 //str {string} - the base64 to convert to a string
 function atob(str) {
-	if (typeof str != "string") return print("got malformed string (is it a string?) (atob)", "WARN");
+	if (typeof str != "string") return print("got malformed string (is it a string?)", "WARN", "atob");
 	//used a tutorial since i idk how base64 works
 	var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
 		output = "",
 		buffer = 0,
-		bits = 0;
+		bits = 0,
+		i = 0;
 
 	str = str.replace(/=+$/, "");
-	for (var i = 0; i < str.length; i++) {
+	for (i = 0; i < str.length; i++) {
 		var val = chars.indexOf(str.charAt(i));
 		if (val < 0) continue;
 
@@ -134,16 +225,16 @@ function atob(str) {
 //Converts a string into Base64
 //str {string} - the string to convert to base64
 function btoa(str) {
-	if (typeof str != "string") return print("got malformed string (is it a string?) (btoa)", "WARN");
+	if (typeof str != "string") return print("got malformed string (is it a string?)", "WARN", "btoa");
 	//used a tutorial since i idk how base64 works
 	var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
-	  output = "",
-	  i = 0;
+		output = "",
+		i = 0;
 
 	while (i < str.length) {
 		var b1 = str.charCodeAt(i++) & 255,
-		  b2 = i < str.length ? str.charCodeAt(i++) & 255 : -1,
-		  b3 = i < str.length ? str.charCodeAt(i++) & 255 : -1;
+			b2 = i < str.length ? str.charCodeAt(i++) & 255 : -1,
+			b3 = i < str.length ? str.charCodeAt(i++) & 255 : -1;
 
 		var triplet =
 			(b1 << 16) |
@@ -162,7 +253,7 @@ function btoa(str) {
 //Loads a module from Github or any page that uses B64 (deprecated)
 //url {string} - https://api.github.com/repos/<name>/<repoName>/contents/<path>
 function loadModule(url) {
-	if (typeof url != "string") return print("got malformed url (is it a string?) (loadModule)", "WARN");
+	if (typeof url != "string") return print("got malformed url (is it a string?)", "WARN", "loadModule");
 	startWebRequest(url, function(status, type, content) {
 		if (status == 200) {
 			var usableData = JSON.parse(content),
@@ -182,7 +273,7 @@ function loadModule(url) {
 //callback {function(var)} - read documentation: https://github.com/rasen46/rJS 
 //max (optional) {number} - maximum about of attempts before module gets dropped
 function require(name, callback, max) {
-	if (typeof name != "string" || typeof callback != "function") return print("got malformed name/callback (is it a string/function?) (require)", "WARN");
+	if (typeof name != "string" || typeof callback != "function") return print("got malformed name/callback (is it a string/function?)", "WARN", "require");
 	var maxAttempts = Math.abs(max) || 5,
 		i = 0,
 		required;
@@ -202,21 +293,78 @@ function require(name, callback, max) {
 	});
 }
 
-//Creates a element (buttons, images, etc)
+//Creates a element, use createElement("help") for a list of vaild 'elements'
 //element {string} - the element to create
 //id {string} - the assigned id to the element
-//additional (optional) {json} - properties to change about the element
+//additional (optional) {object} - properties to change about the element: {"width": 20, "height": 20}
 function createElement(element, id, additional) {
-	if (!element || !id || typeof element != "string" || typeof id != "string") return print("got malformed element or id (is it a string?) (createElement)");
-	var vaildElements = ["button", "textInput", "textLabel", "dropdown", "checkbox", "textArea", "imageUploadButton", "image"];
-	for (var i in vaildElements) {
-		if (vaildElements[i].toLowerCase() == element.toLowerCase()) {
-			eval(vaildElements[i] + "('" + id + "',false)");
+	if (typeof element !== "string" || typeof id !== "string") return print("got malformed element/id (is it a string?)", "WARN", "createElement");
+
+	element = element.toLowerCase();
+
+	var validElements = {
+		text: ["textlabel", "button", "textinput", "textarea", "imageuploadbutton"],
+		bool: ["radiobutton", "checkbox"],
+		imag: ["image"]
+	};
+
+	if (element == "help") {
+		print("all valid elements:");
+		print("Text: " + validElements.text.join(", "));
+		print("Bool: " + validElements.bool.join(", "));
+		print("Image: " + validElements.imag.join(", "));
+		return;
+	}
+
+	var func = {
+		textlabel: function(id) {
+			textLabel(id, "");
+		},
+		button: function(id) {
+			button(id, "");
+		},
+		textinput: function(id) {
+			textInput(id, "");
+		},
+		textarea: function(id) {
+			textArea(id, "");
+		},
+		imageuploadbutton: function(id) {
+			imageUploadButton(id);
+		},
+
+		radiobutton: function(id) {
+			radioButton(id, false);
+		},
+		checkbox: function(id) {
+			checkbox(id, false);
+		},
+
+		image: function(id) {
+			image(id, "icon://fa-times");
+		}
+	};
+
+	var f = false;
+	for (var key in validElements) {
+		if (validElements[key].indexOf(element) != -1) {
+			f = true;
+			break;
 		}
 	}
-	if (additional) {
-		for (var i in additional) {
-			setProperty(id, i, additional[i]);
+
+	if (!f || !func[element]) {
+		print("unknown element '" + element + "'", "WARN", "createElement");
+		return;
+	}
+
+	func[element](id);
+
+	setPosition(id, 160, 225);
+
+	if (typeof additional == "object" && additional != null) {
+		for (var prop in additional) {
+			setProperty(id, prop, additional[prop]);
 		}
 	}
 }

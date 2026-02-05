@@ -1,4 +1,4 @@
-// rasenJS resources v1.0.8 real //
+// rasenJS resources v1.0.9 real //
 // source file: https://github.com/rasen46/rJS //
 
 var rjs = {};
@@ -6,6 +6,7 @@ var rjs = {};
 rjs.startTime = getTime();
 rjs.modules = {};
 rjs.storage = {
+	version: "1.0.9 stable\n",
 	cache: {
 		func: {
 			textlabel: function(id) {
@@ -34,26 +35,26 @@ rjs.storage = {
 			}
 		},
 		validElements: {
-		  text: ["textlabel", "button", "textinput", "textarea", "imageuploadbutton"],
-		  bool: ["radiobutton", "checkbox"],
-		  imag: ["image"]
-	  },
-	  chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+			text: ["textlabel", "button", "textinput", "textarea", "imageuploadbutton"],
+			bool: ["radiobutton", "checkbox"],
+			imag: ["image"]
+		},
+		chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 	}
 };
 
-function checkValidParams(args, scriptName){
-  for (var expectedTypeVal in args) {
-    for (var variableName in args[expectedTypeVal]) {
-      if (typeof args[expectedTypeVal][variableName] == expectedTypeVal) {
-        continue;
-      } else {
-        print("got incorrect parameter for " + variableName + ", expected " + expectedTypeVal + ", but got " + (typeof args[expectedTypeVal][variableName]), "ERROR", scriptName || "nil");
-        return false;
-      }
-    }
-  }
-  return true;
+function checkValidParams(args, scriptName) {
+	for (var expectedTypeVal in args) {
+		for (var variableName in args[expectedTypeVal]) {
+			if (typeof args[expectedTypeVal][variableName] == expectedTypeVal) {
+				continue;
+			} else {
+				print("got incorrect parameter for " + variableName + ", expected " + expectedTypeVal + ", but got " + (typeof args[expectedTypeVal][variableName]), "ERROR", scriptName || "nil");
+				return false;
+			}
+		}
+	}
+	return true;
 }
 
 //Forces a number to be between a range
@@ -61,7 +62,13 @@ function checkValidParams(args, scriptName){
 //minimum {number} - the minimum x should be
 //maximum {number} - the maximum x should be
 function clamp(x, minimum, maximum) {
-  if (!checkValidParams({number:{x: x, minimum: minimum, maximum: maximum}}, "clamp")) return;
+	if (!checkValidParams({
+			number: {
+				x: x,
+				minimum: minimum,
+				maximum: maximum
+			}
+		}, "clamp")) return;
 	return Math.max(minimum, Math.min(maximum, x));
 }
 
@@ -70,7 +77,13 @@ function clamp(x, minimum, maximum) {
 //b {number} - ending value
 //alpha {number} - alpha (percentage to 'b')
 function lerp(a, b, alpha) {
-	if (!checkValidParams({number:{a: a, b: b, alpha: alpha}}, "lerp")) return;
+	if (!checkValidParams({
+			number: {
+				a: a,
+				b: b,
+				alpha: alpha
+			}
+		}, "lerp")) return;
 	return a + (b - a) * alpha;
 }
 
@@ -78,42 +91,45 @@ function lerp(a, b, alpha) {
 //property {object} - should be formatted like this {from: {width: 0}, to: {width: 1}}
 //alpha {number} - alpha (percentage to 'b')
 function lerpProperty(property, alpha) {
-	if (!checkValidParams({number:{alpha: alpha}, object:{property: property}}, "lerpProperty")) return;
+	if (!checkValidParams({
+			number: {
+				alpha: alpha
+			},
+			object: {
+				property: property
+			}
+		}, "lerpProperty")) return;
 	if (!property.to || !property.from) return print("no from/to defined", "WARN");
 	var endProperties = {};
 
 	for (var elementProperty in property.from) {
 		if (elementProperty.includes("color")) {
-      var from, to;
-			
+			var from, to;
+
 			if (property.from[elementProperty].includes("rgba")) {
-			  from = property.from[elementProperty]
-			    .replace("rgba(", "")
-			    .replace(")", "")
-			    .split(",")
-			  ;
+				from = property.from[elementProperty]
+					.replace("rgba(", "")
+					.replace(")", "")
+					.split(",");
 			} else {
-			  from = property.from[elementProperty]
-			    .replace("rgb(", "")
-			    .replace(")", "")
-			    .split(",")
-			  ;
-			  from.push("1");
+				from = property.from[elementProperty]
+					.replace("rgb(", "")
+					.replace(")", "")
+					.split(",");
+				from.push("1");
 			}
-			
+
 			if (property.to[elementProperty].includes("rgba")) {
-			  to = property.to[elementProperty]
-			      .replace("rgba(", "")
-			      .replace(")", "")
-			      .split(",")
-			  ;
+				to = property.to[elementProperty]
+					.replace("rgba(", "")
+					.replace(")", "")
+					.split(",");
 			} else {
-			  to = property.to[elementProperty]
-			      .replace("rgb(", "")
-			      .replace(")", "")
-			      .split(",")
-			  ;
-			  to.push("1");
+				to = property.to[elementProperty]
+					.replace("rgb(", "")
+					.replace(")", "")
+					.split(",");
+				to.push("1");
 			}
 
 			endProperties[elementProperty] = rgb(
@@ -135,7 +151,15 @@ function lerpProperty(property, alpha) {
 //rgb2 {string} - ending RGB value
 //alpha {number} - alpha (percentage to rgb2)
 function lerpRGB(rgb1, rgb2, alpha) {
-  if (!checkValidParams({number:{alpha: alpha}, string:{rgb1: rgb1, rgb2: rgb2}}, "lerpRGB")) return;
+	if (!checkValidParams({
+			number: {
+				alpha: alpha
+			},
+			string: {
+				rgb1: rgb1,
+				rgb2: rgb2
+			}
+		}, "lerpRGB")) return;
 	var c = [rgb1.replace("rgb(", "").replace(")", "").split(","),
 		rgb2.replace("rgb(", "").replace(")", "").split(",")
 	];
@@ -152,7 +176,15 @@ function lerpRGB(rgb1, rgb2, alpha) {
 //rgba2 {string} - ending RGB value
 //alpha {number} - alpha (percentage to rgba2)
 function lerpRGBA(rgba1, rgba2, alpha) {
-  if (!checkValidParams({number:{alpha: alpha}, string:{rgba1: rgba1, rgba2: rgba2}}, "lerpRGBA")) return;
+	if (!checkValidParams({
+			number: {
+				alpha: alpha
+			},
+			string: {
+				rgba1: rgba1,
+				rgba2: rgba2
+			}
+		}, "lerpRGBA")) return;
 	var c = [rgba1.replace("rgba(", "").replace(")", "").split(","),
 		rgba2.replace("rgba(", "").replace(")", "").split(",")
 	];
@@ -184,7 +216,17 @@ function easing(a, dir, power) {
 //easingDirection {"in"/"out"/"inout"} - direction of exponential curve
 //alpha {number} - alpha (percentage to 'b')
 function tween(a, b, easingExponent, easingDirection, alpha) {
-  if (!checkValidParams({number:{a: a, b: b, easingExponent: easingExponent, alpha: alpha}, string:{easingDirection: easingDirection}}, "tween")) return;
+	if (!checkValidParams({
+			number: {
+				a: a,
+				b: b,
+				easingExponent: easingExponent,
+				alpha: alpha
+			},
+			string: {
+				easingDirection: easingDirection
+			}
+		}, "tween")) return;
 	return a + (b - a) * easing(alpha, easingDirection, easingExponent);
 }
 
@@ -194,41 +236,48 @@ function tween(a, b, easingExponent, easingDirection, alpha) {
 //easingDirection {"in"/"out"/"inout"} - direction of exponential curve
 //alpha {number} - alpha (percentage to 'b')
 function tweenProperty(property, easingExponent, easingDirection, alpha) {
-  if (!checkValidParams({number:{easingExponent: easingExponent, alpha: alpha}, string:{easingDirection: easingDirection}, object:{property: property}}, "tweenProperty")) return;
+	if (!checkValidParams({
+			number: {
+				easingExponent: easingExponent,
+				alpha: alpha
+			},
+			string: {
+				easingDirection: easingDirection
+			},
+			object: {
+				property: property
+			}
+		}, "tweenProperty")) return;
 	var endProperties = {};
 
 	for (var elementProperty in property.from) {
 		if (elementProperty.includes("color")) {
 			var from, to;
-			
+
 			if (property.from[elementProperty].includes("rgba")) {
-			  from = property.from[elementProperty]
-			    .replace("rgba(", "")
-			    .replace(")", "")
-			    .split(",")
-			  ;
+				from = property.from[elementProperty]
+					.replace("rgba(", "")
+					.replace(")", "")
+					.split(",");
 			} else {
-			  from = property.from[elementProperty]
-			    .replace("rgb(", "")
-			    .replace(")", "")
-			    .split(",")
-			  ;
-			  from.push("1");
+				from = property.from[elementProperty]
+					.replace("rgb(", "")
+					.replace(")", "")
+					.split(",");
+				from.push("1");
 			}
-			
+
 			if (property.to[elementProperty].includes("rgba")) {
-			  to = property.to[elementProperty]
-			      .replace("rgba(", "")
-			      .replace(")", "")
-			      .split(",")
-			  ;
+				to = property.to[elementProperty]
+					.replace("rgba(", "")
+					.replace(")", "")
+					.split(",");
 			} else {
-			  to = property.to[elementProperty]
-			      .replace("rgb(", "")
-			      .replace(")", "")
-			      .split(",")
-			  ;
-			  to.push("1");
+				to = property.to[elementProperty]
+					.replace("rgb(", "")
+					.replace(")", "")
+					.split(",");
+				to.push("1");
 			}
 
 			endProperties[elementProperty] = rgb(
@@ -270,7 +319,11 @@ function print(text, type, scriptName) {
 //Converts tables exclusively using {"key":[]} into strings
 //obj {object} - table to convert to string
 function stringfy(obj) {
-	if (!checkValidParams({object:{obj: obj}}, "stringfy")) return;
+	if (!checkValidParams({
+			object: {
+				obj: obj
+			}
+		}, "stringfy")) return;
 	var string = "{\n",
 		k = true;
 
@@ -288,7 +341,11 @@ function stringfy(obj) {
 //Converts base64 into a usable string
 //str {string} - the base64 to convert to a string
 function atob(str) {
-	if (!checkValidParams({string:{str: str}}, "atob")) return;
+	if (!checkValidParams({
+			string: {
+				str: str
+			}
+		}, "atob")) return;
 	//used a tutorial since i idk how base64 works
 	var chars = rjs.storage.cache.chars,
 		output = "",
@@ -314,7 +371,11 @@ function atob(str) {
 //Converts a string into base64
 //str {string} - the string to convert to base64
 function btoa(str) {
-	if (!checkValidParams({string:{str: str}}, "btoa")) return;
+	if (!checkValidParams({
+			string: {
+				str: str
+			}
+		}, "btoa")) return;
 	//used a tutorial since i idk how base64 works
 	var chars = rjs.storage.cache.chars,
 		output = "",
@@ -342,7 +403,11 @@ function btoa(str) {
 //Loads a module from Github or any page that uses B64 (deprecated)
 //url {string} - https://api.github.com/repos/<name>/<repoName>/contents/<path>
 function loadModule(url) {
-	if (!checkValidParams({string:{url: url}}, "loadModule")) return;
+	if (!checkValidParams({
+			string: {
+				url: url
+			}
+		}, "loadModule")) return;
 	startWebRequest(url, function(status, type, content) {
 		if (status == 200) {
 			var usableData = JSON.parse(content),
@@ -357,12 +422,41 @@ function loadModule(url) {
 	});
 }
 
-//Requires a module loaded into the app (deprecated)
+//Gets the contents of any page (async)
+//url {string} - a URL
+//callback {function} - the function that gets triggered after this function completes (returns content)
+function getPageContents(url, callback) {
+	if (!checkValidParams({
+			string: {
+				url: url
+			},
+			function: {
+				callback: callback
+			}
+		}, "getPageContents")) return;
+	startWebRequest(url, function(status, type, content) {
+		if (status == 200) {
+			callback(content);
+		} else {
+			callback(false);
+			return print("failed to retrieve page: " + status, "WARN");
+		}
+	});
+}
+
+//Requires a module loaded into the app (deprecated)(async)
 //name {string} - file name
 //callback {function(var)} - read documentation: https://github.com/rasen46/rJS 
 //max (optional) {number} - maximum about of attempts before required module gets dropped
 function require(name, callback, max) {
-	if (!checkValidParams({string:{name: name}, function:{callback: callback}}, "require")) return;
+	if (!checkValidParams({
+			string: {
+				name: name
+			},
+			function: {
+				callback: callback
+			}
+		}, "require")) return;
 	var maxAttempts = Math.abs(max) || 5,
 		i = 0,
 		required = false,
@@ -383,12 +477,17 @@ function require(name, callback, max) {
 	});
 }
 
-//Creates a element, use createElement("help") for a list of vaild 'elements'
+//Creates a element, use createElement("help") for a list of 'vaild elements'
 //element {string} - the element to create
 //id {string} - the assigned id to the element
 //additional (optional) {object} - properties to change about the element: {"width": 20, "height": 20}
 function createElement(element, id, additional) {
-	if (!checkValidParams({string:{element: element, id: id}}, "createElement")) return;
+	if (!checkValidParams({
+			string: {
+				element: element,
+				id: id
+			}
+		}, "createElement")) return;
 	element = element.toLowerCase();
 
 	var validElements = rjs.storage.cache.validElements;
@@ -425,3 +524,77 @@ function createElement(element, id, additional) {
 		}
 	}
 }
+
+//Gets a random item from an array
+//array {object} - the array to get from
+function arrGetRnd(array) {
+	if (!checkValidParams({
+			object: {
+				array: array
+			}
+		}, "arrGetRnd")) return;
+	return array[randomNumber(0, array.length - 1)];
+}
+
+//pushes a item to an array at a random index
+//array {object} - the array to get from
+//obj {any} - the item to insert
+function arrInsertRnd(array, obj) {
+	if (!checkValidParams({
+			object: {
+				array: array
+			}
+		}, "arrInsertRnd")) return;
+	return array.splice(randomNumber(0, array.length - 1), 0, obj);
+}
+
+//Freezes the entire project for a certain amount of time (DANGEROUS)
+//time {number} - the amount of time (in seconds) to hang the project for
+function hang(time) {
+	if (!checkValidParams({
+			number: {
+				time: time
+			}
+		}, "hang")) return;
+	var gt = getTime() + Math.abs(time * 1000);
+
+	for (var i = getTime(); gt >= getTime(); i = getTime()) {
+		if (i == i) i = i;
+	}
+
+	return true;
+}
+
+//Returns the root of a number
+//number {number} - the number to root
+//root {number} - the number to root by
+function numrt(number, root) {
+	if (!checkValidParams({
+			number: {
+				number: number,
+				root: root
+			}
+		}, "numrt")) return;
+	return Math.pow(number, 1 / root);
+}
+
+print(
+	"\n  _____      _  _____ _ \n" +
+	" |  __ \\    | |/ ____| |\n" +
+	" | |__) |   | | (___ | |\n" +
+	" |  _  /_   | |\\___ \\| |\n" +
+	" | | \\ \\ |__| |____) | |____\n" +
+	" |_|  \\_\\____/|_____/|______|\n" +
+	"rasen's Javascript Library\n" +
+	"version: " + rjs.storage.version + "\n\n", "ENGINE_CHECK", "RJSL"
+);
+
+getPageContents("https://api.github.com/repos/rasen46/rJS/contents/version.txt", function(c) {
+	var content = atob(JSON.parse(c).content);
+	if (content != rjs.storage.version) {
+		print("library is out of date or beta build, latest stable version: " + content, "VERSION_CHECK", "RJSL");
+	} else {
+		print("up to date", "VERSION_CHECK", "RJSL");
+	}
+});
+// iced cold line 600

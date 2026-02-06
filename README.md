@@ -5,12 +5,21 @@ rJS (rasen46's JavaScript Library) is a repo with JS scripts designed for Code.o
 ## It Currently Features
 - external loading of functions/scripts from GitHub via `startWebRequest`
 - better console.log outputs (`[00:00:000] [script.js/INFO]: example`)
-- Code.org App Lab compatibility
+- lerping and tweening
+- fetching external content
+- more math operations
+- support for base64
 - relatively optimized code? 
 
 ## Getting Started
 - Import the library `1d793fbc-0484-4b05-84fa-3031e34ae54f` or copy and paste `main.js` into your project
 - Then you're done :scream:
+
+## Terminologies
+|async|deprecated|dangerous|not performant|
+|---|---|---|---|
+| these functions will not yield when called (meaning the next script will immediately run when functions under this tag are ran) | these functions will no longer recieve changes and are pending remaster | these functions are not recommended to be used in production enviroments or can be unsafe to use| these functions will not perform well when being called continuously
+
 
 ## Loading Modules
 - Find the repository you need

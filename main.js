@@ -1,4 +1,4 @@
-// rasenJS resources v1.0.9 real //
+// rasenJS resources v1.0.10 hotfix //
 // source file: https://github.com/rasen46/rJS //
 
 var rjs = {};
@@ -6,7 +6,7 @@ var rjs = {};
 rjs.startTime = getTime();
 rjs.modules = {};
 rjs.storage = {
-	version: "1.0.9 stable\n",
+	version: "1.0.10 hotfix\n",
 	cache: {
 		func: {
 			textlabel: function(id) {
@@ -586,7 +586,7 @@ print(
 	" | | \\ \\ |__| |____) | |____\n" +
 	" |_|  \\_\\____/|_____/|______|\n" +
 	"rasen's Javascript Library\n" +
-	"version: " + rjs.storage.version + "\n\n", "ENGINE_CHECK", "RJSL"
+	"version: " + rjs.storage.version.replace("\n",""), "ENGINE_CHECK", "RJSL"
 );
 
 getPageContents("https://api.github.com/repos/rasen46/rJS/contents/version.txt", function(c) {

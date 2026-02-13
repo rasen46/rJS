@@ -1,1 +1,1 @@
-1.0.10 hotfix
+1.0.11 stable

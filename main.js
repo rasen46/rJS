@@ -1,4 +1,4 @@
-// rasenJS resources v1.0.10 hotfix //
+// rasenJS resources v1.0.11 stable //
 // source file: https://github.com/rasen46/rJS //
 
 var rjs = {};
@@ -6,7 +6,7 @@ var rjs = {};
 rjs.startTime = getTime();
 rjs.modules = {};
 rjs.storage = {
-	version: "1.0.10 hotfix\n",
+	version: "1.0.11 stable\n",
 	cache: {
 		func: {
 			textlabel: function(id) {
@@ -49,7 +49,7 @@ function checkValidParams(args, scriptName) {
 			if (typeof args[expectedTypeVal][variableName] == expectedTypeVal) {
 				continue;
 			} else {
-				print("got incorrect parameter for " + variableName + ", expected " + expectedTypeVal + ", but got " + (typeof args[expectedTypeVal][variableName]), "ERROR", scriptName || "nil");
+				print("got incorrect parameter for " + variableName + ", expected " + expectedTypeVal + ", but got " + (typeof args[expectedTypeVal][variableName]) + " (" + args[expectedTypeVal][variableName] + ")", "ERROR", scriptName || "nil");
 				return false;
 			}
 		}
@@ -209,7 +209,7 @@ function easing(a, dir, power) {
 	}
 }
 
-//Exponential lerping (less performant)
+//Exponential lerping (not performant)
 //a {number} - starting number
 //b {number} - ending number
 //easingExponent {number} - exponent 'alpha' should accend by
@@ -230,7 +230,7 @@ function tween(a, b, easingExponent, easingDirection, alpha) {
 	return a + (b - a) * easing(alpha, easingDirection, easingExponent);
 }
 
-//Exponential lerping for element properties (less performant)
+//Exponential lerping for element properties (not performant)
 //property {object} - should be formatted like this {from: {width: 0}, to: {width: 1}}
 //easingExponent {number} - exponent 'alpha' should accend by
 //easingDirection {"in"/"out"/"inout"} - direction of exponential curve
@@ -338,6 +338,17 @@ function stringfy(obj) {
 	return string;
 }
 
+//Removes the last item from an array
+//array {object} - the array to remove from
+function pop(array) {
+	if (!checkValidParams({
+			object: {
+				array: array
+			}
+		}, "lerpRGB")) return;
+	return array.slice(0, -1);
+}
+
 //Converts base64 into a usable string
 //str {string} - the base64 to convert to a string
 function atob(str) {
@@ -400,7 +411,7 @@ function btoa(str) {
 	return output;
 }
 
-//Loads a module from Github or any page that uses B64 (deprecated)
+//Loads a module from Github or any page that uses B64 (deprecated) (DANGEROUS)
 //url {string} - https://api.github.com/repos/<name>/<repoName>/contents/<path>
 function loadModule(url) {
 	if (!checkValidParams({
@@ -438,8 +449,7 @@ function getPageContents(url, callback) {
 		if (status == 200) {
 			callback(content);
 		} else {
-			callback(false);
-			return print("failed to retrieve page: " + status, "WARN");
+			return print("failed to retrieve page: " + content + " (" + url + ")", "ERROR", "getPageContents");
 		}
 	});
 }
@@ -536,7 +546,7 @@ function arrGetRnd(array) {
 	return array[randomNumber(0, array.length - 1)];
 }
 
-//pushes a item to an array at a random index
+//Pushes a item to an array at a random index
 //array {object} - the array to get from
 //obj {any} - the item to insert
 function arrInsertRnd(array, obj) {
@@ -546,6 +556,53 @@ function arrInsertRnd(array, obj) {
 			}
 		}, "arrInsertRnd")) return;
 	return array.splice(randomNumber(0, array.length - 1), 0, obj);
+}
+
+//Removes a random item in an array
+//array {object} - the array to remove from
+function arrRemoveRnd(array) {
+  if (!checkValidParams({
+		object: {
+			array: array
+		}
+	}, "arrRemoveRnd")) return;
+	return array.splice(randomNumber(0, array.length - 1), 1);
+}
+
+function arrBlacklist(array, list) {
+  if (!checkValidParams({
+		object: {
+			array: array,
+			list: list
+		}
+	}, "arrBlacklist")) return;
+	
+	var newArray = [];
+	for (var i in array) {
+	  for (var ii in list) {
+	    if (array[i] != list[ii]) newArray.push(list[ii]);
+	  }
+	}
+	
+	return newArray;
+}
+
+function arrWhitelist(array, list) {
+  if (!checkValidParams({
+		object: {
+			array: array,
+			list: list
+		}
+	}, "arrWhitelist")) return;
+	
+	var newArray = [];
+	for (var i in array) {
+	  for (var ii in list) {
+	    if (array[i] == list[ii]) newArray.push(list[ii]);
+	  }
+	}
+	
+	return newArray;
 }
 
 //Freezes the entire project for a certain amount of time (DANGEROUS)
@@ -579,14 +636,14 @@ function numrt(number, root) {
 }
 
 print(
-	"\n  _____      _  _____ _ \n" +
+  "\n  _____      _  _____ _ \n" +
 	" |  __ \\    | |/ ____| |\n" +
 	" | |__) |   | | (___ | |\n" +
 	" |  _  /_   | |\\___ \\| |\n" +
 	" | | \\ \\ |__| |____) | |____\n" +
 	" |_|  \\_\\____/|_____/|______|\n" +
 	"rasen's Javascript Library\n" +
-	"version: " + rjs.storage.version.replace("\n",""), "ENGINE_CHECK", "RJSL"
+	"version: " + rjs.storage.version.replace("\n", ""), "ENGINE_CHECK", "RJSL"
 );
 
 getPageContents("https://api.github.com/repos/rasen46/rJS/contents/version.txt", function(c) {
@@ -597,4 +654,3 @@ getPageContents("https://api.github.com/repos/rasen46/rJS/contents/version.txt",
 		print("up to date", "VERSION_CHECK", "RJSL");
 	}
 });
-// iced cold line 600

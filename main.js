@@ -1,4 +1,4 @@
-// rasenJS resources v1.0.11 stable //
+// rasenJS resources v1.0.10 hotfix //
 // source file: https://github.com/rasen46/rJS //
 
 var rjs = {};
@@ -569,6 +569,9 @@ function arrRemoveRnd(array) {
 	return array.splice(randomNumber(0, array.length - 1), 1);
 }
 
+//Removes any item that matches with a item in `list`
+//array {object} - the array to check
+//list {object} - the blacklist
 function arrBlacklist(array, list) {
   if (!checkValidParams({
 		object: {
@@ -587,6 +590,9 @@ function arrBlacklist(array, list) {
 	return newArray;
 }
 
+//Only adds item that matches with a item in `list`
+//array {object} - the array to check
+//list {object} - the whitelist
 function arrWhitelist(array, list) {
   if (!checkValidParams({
 		object: {

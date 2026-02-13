@@ -1,4 +1,4 @@
-// rasenJS resources v1.0.10 hotfix //
+// rasenJS resources v1.0.11_u1 hotfix //
 // source file: https://github.com/rasen46/rJS //
 
 var rjs = {};
@@ -6,7 +6,7 @@ var rjs = {};
 rjs.startTime = getTime();
 rjs.modules = {};
 rjs.storage = {
-	version: "1.0.11 stable\n",
+	version: "1.0.11_u1 hotfix\n",
 	cache: {
 		func: {
 			textlabel: function(id) {

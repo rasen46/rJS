@@ -1,4 +1,4 @@
-// rasenJS resources v1.0.11_u1 hotfix //
+// rasenJS resources v1.0.12 real //
 // source file: https://github.com/rasen46/rJS //
 
 var rjs = {};
@@ -6,7 +6,7 @@ var rjs = {};
 rjs.startTime = getTime();
 rjs.modules = {};
 rjs.storage = {
-	version: "1.0.11_u1 hotfix\n",
+	version: "v1.0.12 real\n",
 	cache: {
 		func: {
 			textlabel: function(id) {
@@ -57,7 +57,7 @@ function checkValidParams(args, scriptName) {
 	return true;
 }
 
-//Forces a number to be between a range
+//Returns the provided number clamped between a specified range
 //x {number} - the number to clamp
 //minimum {number} - the minimum x should be
 //maximum {number} - the maximum x should be
@@ -72,7 +72,8 @@ function clamp(x, minimum, maximum) {
 	return Math.max(minimum, Math.min(maximum, x));
 }
 
-//Linear Interpolation using alpha
+//Linear Interpolation
+//Returns the interpolated value
 //a {number} - starting value
 //b {number} - ending value
 //alpha {number} - alpha (percentage to 'b')
@@ -87,7 +88,8 @@ function lerp(a, b, alpha) {
 	return a + (b - a) * alpha;
 }
 
-//Linear lerping for element properties
+//Linear Interpolation for lists of properties
+//Returns the interpolated table
 //property {object} - should be formatted like this {from: {width: 0}, to: {width: 1}}
 //alpha {number} - alpha (percentage to 'b')
 function lerpProperty(property, alpha) {
@@ -146,7 +148,8 @@ function lerpProperty(property, alpha) {
 	return endProperties;
 }
 
-//Linear Interpolation using alpha with RGB values (prone to errors, use RBGA instead)
+//Linear Interpolation for RGB values (prone to errors, use RBGA instead) (deprecated)
+//Returns the interpolated value
 //rgb1 {string} - starting RGB value
 //rgb2 {string} - ending RGB value
 //alpha {number} - alpha (percentage to rgb2)
@@ -171,7 +174,8 @@ function lerpRGB(rgb1, rgb2, alpha) {
 	);
 }
 
-//Linear Interpolation using alpha with RGBA values
+//Linear Interpolation for RGBA values
+//Returns the interpolated value
 //rgba1 {string} - starting RGB value
 //rgba2 {string} - ending RGB value
 //alpha {number} - alpha (percentage to rgba2)
@@ -210,6 +214,7 @@ function easing(a, dir, power) {
 }
 
 //Exponential lerping (not performant)
+//Returns the interpolated value
 //a {number} - starting number
 //b {number} - ending number
 //easingExponent {number} - exponent 'alpha' should accend by
@@ -231,6 +236,7 @@ function tween(a, b, easingExponent, easingDirection, alpha) {
 }
 
 //Exponential lerping for element properties (not performant)
+//Returns the interpolated table
 //property {object} - should be formatted like this {from: {width: 0}, to: {width: 1}}
 //easingExponent {number} - exponent 'alpha' should accend by
 //easingDirection {"in"/"out"/"inout"} - direction of exponential curve
@@ -316,7 +322,13 @@ function print(text, type, scriptName) {
 	console.log("[" + formatToReadable + "] " + "[" + scNM + "/" + logType + "]: " + text);
 }
 
+//Returns the start time of the project
+function getStartTime() {
+	return rjs.startTime;
+}
+
 //Converts tables exclusively using {"key":[]} into strings
+//Returns a table
 //obj {object} - table to convert to string
 function stringfy(obj) {
 	if (!checkValidParams({
@@ -338,7 +350,7 @@ function stringfy(obj) {
 	return string;
 }
 
-//Removes the last item from an array
+//Returns the provided array with last item removed
 //array {object} - the array to remove from
 function pop(array) {
 	if (!checkValidParams({
@@ -350,6 +362,7 @@ function pop(array) {
 }
 
 //Converts base64 into a usable string
+//Returns a decoded string
 //str {string} - the base64 to convert to a string
 function atob(str) {
 	if (!checkValidParams({
@@ -380,6 +393,7 @@ function atob(str) {
 }
 
 //Converts a string into base64
+//Returns a encoded string
 //str {string} - the string to convert to base64
 function btoa(str) {
 	if (!checkValidParams({
@@ -411,7 +425,7 @@ function btoa(str) {
 	return output;
 }
 
-//Loads a module from Github or any page that uses B64 (deprecated) (DANGEROUS)
+//Loads and executes a module from Github or any page that uses B64 (deprecated) (DANGEROUS)
 //url {string} - https://api.github.com/repos/<name>/<repoName>/contents/<path>
 function loadModule(url) {
 	if (!checkValidParams({
@@ -454,7 +468,7 @@ function getPageContents(url, callback) {
 	});
 }
 
-//Requires a module loaded into the app (deprecated)(async)
+//Requires a module loaded into the app (deprecated) (async)
 //name {string} - file name
 //callback {function(var)} - read documentation: https://github.com/rasen46/rJS 
 //max (optional) {number} - maximum about of attempts before required module gets dropped
@@ -492,6 +506,16 @@ function require(name, callback, max) {
 //id {string} - the assigned id to the element
 //additional (optional) {object} - properties to change about the element: {"width": 20, "height": 20}
 function createElement(element, id, additional) {
+	var validElements = rjs.storage.cache.validElements;
+
+	if (element == "help") {
+		print("all valid elements:", "help", "createElement");
+		print("Text: " + validElements.text.join(", "), "help", "createElement");
+		print("Bool: " + validElements.bool.join(", "), "help", "createElement");
+		print("Image: " + validElements.imag.join(", "), "help", "createElement");
+		return;
+	}
+
 	if (!checkValidParams({
 			string: {
 				element: element,
@@ -499,16 +523,6 @@ function createElement(element, id, additional) {
 			}
 		}, "createElement")) return;
 	element = element.toLowerCase();
-
-	var validElements = rjs.storage.cache.validElements;
-
-	if (element == "help") {
-		print("all valid elements:");
-		print("Text: " + validElements.text.join(", "));
-		print("Bool: " + validElements.bool.join(", "));
-		print("Image: " + validElements.imag.join(", "));
-		return;
-	}
 
 	var func = rjs.storage.cache.func;
 
@@ -535,7 +549,67 @@ function createElement(element, id, additional) {
 	}
 }
 
-//Gets a random item from an array
+//Returns the distance between 2 points
+// x - {number} - the x position of point 1
+// y - {number} - the y position of point 1
+// x1 - {number} - the x position of point 2
+// y1 - {number} - the y position of point 2
+function getDistanceFromPoints(x, y, x1, y1) {
+	if (!checkValidParams({
+			number: {
+				x: x,
+				x1: x1,
+				y: y,
+				y1: y1
+			}
+		}, "getDistanceFromPoints")) return;
+
+	return Math.sqrt(Math.pow(x1 - x, 2) + Math.pow(y1 - y, 2));
+}
+
+//Returns the distance between 2 elements
+// elementId - {number} - the id of the element you want to use to check the distance between element1
+// elementId1 - {number} - the id of the element1 you want to use to check the distance between element
+function getDistanceFromElements(elementId, elementId1) {
+	if (!checkValidParams({
+			string: {
+				elementId: elementId,
+				elementId1: elementId1
+			}
+		}, "getDistanceFromElements")) return;
+
+	return getDistanceFromPoints(
+		getXPosition(elementId),
+		getYPosition(elementId),
+		getXPosition(elementId1),
+		getYPosition(elementId1)
+	);
+}
+
+//Returns 'true' or 'false' if element1 is in the bounds of element (not performant)
+//elementId {string} - the element used to define the bounds of where to check
+//elementId1 {string} - the element to find within the bounds of 'elementId'
+function checkBoundsAABB(elementId, elementId1) {
+	if (!checkValidParams({
+			string: {
+				elementId: elementId,
+				elementId1: elementId1
+			}
+		}, "checkBoundsAABB")) return;
+
+	var rect1 = {
+		MIN: [getXPosition(elementId), getYPosition(elementId)],
+		MAX: [getXPosition(elementId) + getProperty(elementId, "width"), getYPosition(elementId) + getProperty(elementId, "height")]
+	};
+	var rect2 = {
+		MIN: [getXPosition(elementId1), getYPosition(elementId1)],
+		MAX: [getXPosition(elementId1) + getProperty(elementId1, "width"), getYPosition(elementId1) + getProperty(elementId1, "height")]
+	};
+
+	return !(rect1.MAX[0] <= rect2.MIN[0] || rect1.MIN[0] >= rect2.MAX[0] || rect1.MAX[1] <= rect2.MIN[1] || rect1.MIN[1] >= rect2.MAX[1]);
+}
+
+//Returns a random item from an array
 //array {object} - the array to get from
 function arrGetRnd(array) {
 	if (!checkValidParams({
@@ -546,7 +620,7 @@ function arrGetRnd(array) {
 	return array[randomNumber(0, array.length - 1)];
 }
 
-//Pushes a item to an array at a random index
+//Returns an array with an item pushed to a random index
 //array {object} - the array to get from
 //obj {any} - the item to insert
 function arrInsertRnd(array, obj) {
@@ -558,57 +632,100 @@ function arrInsertRnd(array, obj) {
 	return array.splice(randomNumber(0, array.length - 1), 0, obj);
 }
 
-//Removes a random item in an array
+//Returns the array with a random item removed
 //array {object} - the array to remove from
 function arrRemoveRnd(array) {
-  if (!checkValidParams({
-		object: {
-			array: array
-		}
-	}, "arrRemoveRnd")) return;
+	if (!checkValidParams({
+			object: {
+				array: array
+			}
+		}, "arrRemoveRnd")) return;
 	return array.splice(randomNumber(0, array.length - 1), 1);
 }
 
-//Removes any item that matches with a item in `list`
+//Returns an array with items that doesn't match with items in `list`
 //array {object} - the array to check
 //list {object} - the blacklist
 function arrBlacklist(array, list) {
-  if (!checkValidParams({
-		object: {
-			array: array,
-			list: list
-		}
-	}, "arrBlacklist")) return;
-	
+	if (!checkValidParams({
+			object: {
+				array: array,
+				list: list
+			}
+		}, "arrBlacklist")) return;
+
 	var newArray = [];
 	for (var i in array) {
-	  for (var ii in list) {
-	    if (array[i] != list[ii]) newArray.push(list[ii]);
-	  }
+		for (var ii in list) {
+			if (array[i] != list[ii]) newArray.push(list[ii]);
+		}
 	}
-	
+
 	return newArray;
 }
 
-//Only adds item that matches with a item in `list`
+//Returns an array with items that only match with items in `list`
 //array {object} - the array to check
 //list {object} - the whitelist
 function arrWhitelist(array, list) {
-  if (!checkValidParams({
-		object: {
-			array: array,
-			list: list
-		}
-	}, "arrWhitelist")) return;
-	
+	if (!checkValidParams({
+			object: {
+				array: array,
+				list: list
+			}
+		}, "arrWhitelist")) return;
+
 	var newArray = [];
 	for (var i in array) {
-	  for (var ii in list) {
-	    if (array[i] == list[ii]) newArray.push(list[ii]);
-	  }
+		for (var ii in list) {
+			if (array[i] == list[ii]) newArray.push(list[ii]);
+		}
 	}
-	
+
 	return newArray;
+}
+
+//Returns a sorted array based on a rule given
+//use 'arrSort("help")' for a list of vaild rules
+//array {object] - the array to sort
+//rule {string} - the rule to sort by
+function arrSort(array, rule) {
+	if (array == "help") {
+		print("list of vaild rules:", "help", "arrSort");
+		print("bigToSmol, smolToBig", "help", "arrSort");
+		print("bigToSmol sorts the list from biggest (word/number) to smallest (word/number)", "help", "arrSort");
+		print("smolToBig sorts the list from smallest (word/number) to biggest (word/number)", "help", "arrSort");
+		return;
+	}
+	if (!checkValidParams({
+			object: {
+				array: array
+			},
+			string: {
+				rule: rule
+			}
+		}, "arrSort")) return;
+
+	var reConst = [];
+	var mem = {};
+
+	for (var i in array) {
+		mem[(parseInt(array[i]) || array[i].length)] = array[i];
+	}
+
+	if (rule.toLowerCase() == "bigtosmol") {
+		for (var i in mem) {
+			reConst.splice(0, 0, mem[i]);
+		}
+	} else if (rule.toLowerCase() == "smoltobig") {
+		for (var i in mem) {
+			reConst.push(mem[i]);
+		}
+	} else {
+		print("no vaild rule given", "ERROR", "arrSort");
+	}
+
+	return reConst;
 }
 
 //Freezes the entire project for a certain amount of time (DANGEROUS)
@@ -641,14 +758,24 @@ function numrt(number, root) {
 	return Math.pow(number, 1 / root);
 }
 
+//debug tool for me to use haha
+function execute(arg) {
+	if (arg.toLowerCase() == "help") {
+		print("hello, most functions in this library RETURN something back, so most of these functions should be used to DEFINE a VARIABLE");
+		print("also, you can use RJSL.startTime to get the time of when the project was ran if you need to sync stuff");
+		print("and if you want to use the module feature, refer to the github page as its pretty complicated to explain in here.");
+		print("but thats rlly it");
+	}
+}
+
 print(
-  "\n  _____      _  _____ _ \n" +
+	"\n  _____      _  _____ _ \n" +
 	" |  __ \\    | |/ ____| |\n" +
 	" | |__) |   | | (___ | |\n" +
 	" |  _  /_   | |\\___ \\| |\n" +
 	" | | \\ \\ |__| |____) | |____\n" +
 	" |_|  \\_\\____/|_____/|______|\n" +
-	"rasen's Javascript Library\n" +
+	"rasen's Javascript Library / https://github.com/rasen46/rJS\n" +
 	"version: " + rjs.storage.version.replace("\n", ""), "ENGINE_CHECK", "RJSL"
 );
 

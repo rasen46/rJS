@@ -4,9 +4,7 @@ rGML (rasen46's GameMaker Library) is rJS, but ported to GameMaker
 
 ## It Currently Features
 - lerping and tweening
-- more math operations
-- support for base64
-- relatively optimized code? 
+- array modifications
 
 ## Terminologies
 |async|deprecated|dangerous|not performant|
